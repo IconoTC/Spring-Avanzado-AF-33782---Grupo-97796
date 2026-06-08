@@ -1,0 +1,13 @@
+2026-06-08T11:32:04.387+02:00  INFO 29232 --- [demo] [restartedMain] com.example.DemoApplication              : Starting DemoApplication using Java 25 with PID 29232 (C:\Cursos\REM20260608\demo\target\classes started by Javier in C:\Cursos\REM20260608\demo)
+2026-06-08T11:32:04.387+02:00  INFO 29232 --- [demo] [restartedMain] com.example.DemoApplication              : No active profile set, falling back to 1 default profile: "default"
+2026-06-08T11:32:04.562+02:00  INFO 29232 --- [demo] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8001 (http)
+2026-06-08T11:32:04.563+02:00  INFO 29232 --- [demo] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-08T11:32:04.563+02:00  INFO 29232 --- [demo] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.21]
+2026-06-08T11:32:04.584+02:00  INFO 29232 --- [demo] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 195 ms
+2026-06-08T11:32:04.643+02:00  INFO 29232 --- [demo] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8001 (http) with context path '/'
+2026-06-08T11:32:04.645+02:00  INFO 29232 --- [demo] [restartedMain] com.example.DemoApplication              : Started DemoApplication in 0.33 seconds (process running for 1488.972)
+2026-06-08T11:32:04.647+02:00  WARN 29232 --- [demo] [restartedMain] com.example.DemoApplication              : Aplicación arrancada...
+2026-06-08T11:32:04.648+02:00  INFO 29232 --- [demo] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-06-08T11:37:26.742+02:00  INFO 29232 --- [demo] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2026-06-08T11:37:26.744+02:00  INFO 29232 --- [demo] [Thread-61] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-08T11:37:26.761+02:00  INFO 29232 --- [demo] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete

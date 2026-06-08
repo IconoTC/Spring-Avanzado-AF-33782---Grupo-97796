@@ -8,10 +8,13 @@ import org.springframework.context.annotation.Bean;
 import com.example.base.DummyJSpecify;
 
 import jakarta.annotation.PreDestroy;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @SpringBootApplication
 public class DemoApplication implements CommandLineRunner {
-
+//	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DemoApplication.class);
+	
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
@@ -19,6 +22,7 @@ public class DemoApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		System.err.println("Aplicación arrancada...");
+		log.warn("Aplicación arrancada...");
 	}
 
 	@PreDestroy
