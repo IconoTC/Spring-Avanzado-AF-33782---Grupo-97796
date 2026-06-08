@@ -3,6 +3,9 @@ package com.example;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+import com.example.base.DummyJSpecify;
 
 import jakarta.annotation.PreDestroy;
 
@@ -21,5 +24,19 @@ public class DemoApplication implements CommandLineRunner {
 	@PreDestroy
 	void Cierre() {
 		System.err.println("Aplicación cerrada...");
+	}
+	
+	@Bean
+	CommandLineRunner nulos() {
+		return arg -> {
+			try {
+				var dummy = new DummyJSpecify("Hola mundo");
+//				System.out.println(dummy.getCadena().toUpperCase());
+				if(dummy.getCadenaSegura().isPresent())
+				System.out.println(dummy.getCadenaSegura().get().toUpperCase());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		};
 	}
 }

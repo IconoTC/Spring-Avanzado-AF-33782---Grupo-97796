@@ -8,7 +8,7 @@ import org.jspecify.annotations.Nullable;
 
 // import lombok.NonNull;
 
-// @NullMarked
+//@NullMarked
 public class DummyJSpecify {
 	@Nullable String cadena;
 
@@ -18,6 +18,7 @@ public class DummyJSpecify {
 	}
 	
 	public DummyJSpecify(String cadena) {
+//		this.cadena = cadena;
 		setCadenaSegura(cadena);
 	}
 
