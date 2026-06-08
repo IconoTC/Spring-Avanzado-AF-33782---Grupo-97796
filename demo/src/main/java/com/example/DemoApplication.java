@@ -1,11 +1,21 @@
 package com.example;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.example.base.DummyJSpecify;
+import com.example.ioc.ConstructorConValores;
+import com.example.ioc.NotificationService;
+import com.example.ioc.Rango;
+import com.example.ioc.anotaciones.Twit;
+import com.example.ioc.contratos.ServicioCadenas;
+import com.example.ioc.notificaciones.Sender;
 
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +25,12 @@ import lombok.extern.slf4j.Slf4j;
 public class DemoApplication implements CommandLineRunner {
 //	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DemoApplication.class);
 	
+	private final ConstructorConValores miClase;
+
+	DemoApplication(ConstructorConValores miClase) {
+		this.miClase = miClase;
+	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
@@ -30,7 +46,7 @@ public class DemoApplication implements CommandLineRunner {
 		System.err.println("Aplicación cerrada...");
 	}
 	
-	@Bean
+//	@Bean
 	CommandLineRunner nulos() {
 		return arg -> {
 			try {
@@ -38,6 +54,40 @@ public class DemoApplication implements CommandLineRunner {
 //				System.out.println(dummy.getCadena().toUpperCase());
 				if(dummy.getCadenaSegura().isPresent())
 				System.out.println(dummy.getCadenaSegura().get().toUpperCase());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		};
+	}
+	
+//	@Bean
+	CommandLineRunner ioc(NotificationService notify, ServicioCadenas srv, ConstructorConValores miOtraClase, 
+			@Value("${mi.valor:Sin valor}") String miValor, Rango rango
+) {
+		return arg -> {
+			try {
+//				NotificationService notify = new NotificationServiceImpl();
+//				ServicioCadenas srv = new ServicioCadenasImpl(new RepositorioCadenasImpl(new ConfiguracionImpl(notify), notify), notify);
+				
+				miOtraClase.titulo(miOtraClase.getAutor());
+				notify.add("Hola mundo");
+				srv.add("Uno nuevo");
+				notify.add(miValor);
+				notify.add(rango.toString());
+				System.out.println("=================================>");
+				notify.getListado().forEach(System.out::println);
+				System.out.println("<=================================");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		};
+	}
+	@Bean
+	CommandLineRunner porNombre(@Twit Sender sender, List<Sender> todos) {
+		return arg -> {
+			try {
+				sender.send("envía notidicación");
+				todos.forEach(s -> s.send("mensaje"));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

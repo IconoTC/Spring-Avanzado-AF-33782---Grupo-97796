@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 import com.example.base.DummyJSpecify;
 import com.example.ioc.anotaciones.Twit;
@@ -13,13 +14,14 @@ import com.example.ioc.notificaciones.TwitterSender;
 
 @Configuration
 public class AppConfig {
-//	@Bean
-//	ConstructorConValores miClase(NotificationService notify) {
-//		return new ConstructorConValores(1, "yo", notify);
-//	}
 	@Bean
-	@Qualifier("tweet")
-//	@Twit
+	@Lazy
+	ConstructorConValores miClase(NotificationService notify) {
+		return new ConstructorConValores(1, "yo" /*, notify*/);
+	}
+	@Bean
+//	@Qualifier("tweet")
+	@Twit
 	Sender twitea() {
 		return new TwitterSender();
 	}

@@ -10,11 +10,12 @@ import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
-//@Component
+@Component("miOtraClase")
 //@Scope("prototype")
 public class ConstructorConValores {
 	@Autowired
 	private NotificationService notify;
+	private String autorString;
 	
 	@ConstructorProperties({"version", "otroAutor"})
 	public ConstructorConValores(int version, String otroAutor /*, NotificationService notify*/) {
@@ -22,11 +23,16 @@ public class ConstructorConValores {
 //		notify.add(getClass().getSimpleName() + " - Version: " + version + " Autor: " + otroAutor);
 		System.err.println(notify == null ? "no se ha inyectado": ("se ha inyectado "));
 		System.err.println(getClass().getSimpleName() + " - Version: " + version + " Autor: " + otroAutor);
+		autorString = otroAutor;
 	}
 	@PostConstruct
 	void init() {
 		System.err.println(notify == null ? "no se ha inyectado": ("se ha inyectado " + notify.getClass().getSimpleName()));
 //		notify.add(getClass().getSimpleName() + " - Version: " + version + " Autor: " + otroAutor);
+	}
+	
+	public String getAutor() {
+		return autorString;
 	}
 	
 	public void titulo(String tratamiento, String autor) {

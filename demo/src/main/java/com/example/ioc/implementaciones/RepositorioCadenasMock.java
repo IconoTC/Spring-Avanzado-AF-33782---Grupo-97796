@@ -17,6 +17,7 @@ import jakarta.annotation.PostConstruct;
 @MockRepository
 //@Repository("dao")
 //@Qualifier("test")
+//@Primary
 public class RepositorioCadenasMock implements RepositorioCadenas {
 	@Autowired
 	private NotificationService notify;
