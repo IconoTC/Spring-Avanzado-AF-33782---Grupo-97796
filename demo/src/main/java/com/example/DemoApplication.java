@@ -7,10 +7,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.event.EventListener;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.example.base.DummyJSpecify;
 import com.example.ioc.ConstructorConValores;
+import com.example.ioc.GenericoEvent;
 import com.example.ioc.NotificationService;
 import com.example.ioc.Rango;
 import com.example.ioc.anotaciones.Twit;
@@ -60,7 +62,7 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 	
-//	@Bean
+	@Bean
 	CommandLineRunner ioc(NotificationService notify, ServicioCadenas srv, ConstructorConValores miOtraClase, 
 			@Value("${mi.valor:Sin valor}") String miValor, Rango rango
 ) {
@@ -82,7 +84,7 @@ public class DemoApplication implements CommandLineRunner {
 			}
 		};
 	}
-	@Bean
+//	@Bean
 	CommandLineRunner porNombre(@Twit Sender sender, List<Sender> todos) {
 		return arg -> {
 			try {
@@ -117,4 +119,18 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 
+//	@EventListener
+//	void eventHandlerGenerico(GenericoEvent event) {
+//		System.err.println("Evento recibido de %s: %s".formatted(event.origen(), event.carga()));
+//	}
+//
+//	@EventListener
+//	void eventHandlerGenericoOtro(GenericoEvent event) {
+//		System.err.println("Otro tratamiento de %s: %s".formatted(event.origen(), event.carga()));
+//	}
+//
+//	@EventListener
+//	void eventHandlerCadena(String event) {
+//		System.err.println("Evento cadena: %s".formatted(event));
+//	}
 }
