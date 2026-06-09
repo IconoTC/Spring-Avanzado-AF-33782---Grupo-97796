@@ -6,8 +6,12 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import com.example.ioc.anotaciones.Pruebas;
+
+//@Pruebas
 @Component
 @Aspect
 public class LoggerAspect {

@@ -38,7 +38,7 @@ public class DummyJSpecify {
 		this.cadena = cadena;
 	}
 
-	public void setCadenaSegura(String cadena) {
+	public void setCadenaSegura(@Nullable String cadena) {
 		if(cadena == null)
 			throw new IllegalArgumentException("El argumento no puede ser nulo");
 		this.cadena = cadena;

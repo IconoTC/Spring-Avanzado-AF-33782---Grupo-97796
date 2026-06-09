@@ -13,7 +13,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
-//@Aspect
+@Aspect
 public class AspectoImplAspect {
 	@Pointcut("execution(public * com.example.ioc..*.*(..))")
 	public void miPuntoDeCorte() {
@@ -27,7 +27,7 @@ public class AspectoImplAspect {
 //	@Before("miPuntoDeCorte()")
 //	@Order(20)
 //	public void consejoAntesDelMetodo2(JoinPoint jp) {
-//		System.err.println(">>> Soy segun un consejo antesDelMetodo " + jp.getSignature());
+//		System.err.println(">>> Soy segundo un consejo antesDelMetodo " + jp.getSignature());
 //	}
 //	@Order(10)
 //	@Before("execution(int com.example.ioc..*.get*(..))")
@@ -41,7 +41,7 @@ public class AspectoImplAspect {
 //		System.err.println(">>> Soy un consejo despuesDelMetodo " + jp.getSignature());
 //	}
 
-//	@AfterReturning(pointcut="execution(int com.example.ioc..*.get*(..))",	returning="retVal")
+//	@AfterReturning(pointcut="execution(int com.example.ioc..*.get*())",	returning="retVal")
 //	public void consejoDespuesDeGetPropiedad(JoinPoint jp, int retVal) {
 //		System.err.println(">>> La funcion '" + jp.getSignature() + "' ha devuelto " + retVal);
 //	}

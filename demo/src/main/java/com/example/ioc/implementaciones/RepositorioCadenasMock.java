@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Primary;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Repository;
 
+import com.example.aop.anotations.LoggerAll;
 import com.example.ioc.NotificationService;
 import com.example.ioc.anotaciones.MockRepository;
 //import com.example.ioc.anotaciones.RepositoryMock;
@@ -37,6 +38,7 @@ public class RepositorioCadenasMock implements RepositorioCadenas {
 
 
 	@Override
+	@LoggerAll
 	public void save(String item) {
 		notify.add("Simulo que guardo los datos '%s' con %s".formatted(item, getClass().getSimpleName()));
 		doEvent("Han ejecutado el guardar.");
