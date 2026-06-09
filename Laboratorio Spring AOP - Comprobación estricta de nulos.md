@@ -55,7 +55,7 @@ Agregar la dependencia (en Spring Boot 4.x)::
 
 ## Paso 2: Clase principal
 
-`src/main/java/com/example/SpringIocLabApplication.java`
+`src/main/java/com/example/SpringAopLabApplication.java`
 
 ```java
 package com.example;
@@ -68,7 +68,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @SpringBootApplication
 public class SpringAopLabApplication {
     public static void main(String[] args) {
-        SpringApplication.run(SpringIocLabApplication.class, args);
+        SpringApplication.run(SpringAopLabApplication.class, args);
     }
 }
 ```
@@ -383,7 +383,7 @@ public class StrictNullChecksAspect {
 
 ## Estructura base
 
-    spring-ioc-lab/
+    spring-aop-lab/
     ├─ src/main/java/com/example/
     │   ├─ SpringAopLabApplication.java
     │   └─ aop/StrictNullChecksAspect.java
