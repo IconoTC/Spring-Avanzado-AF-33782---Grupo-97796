@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.resilience.annotation.EnableResilientMethods;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -37,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 @EnableAspectJAutoProxy
 @EnableScheduling
 @EnableAsync
+@EnableResilientMethods
 public class DemoApplication implements CommandLineRunner {
 //	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DemoApplication.class);
 
@@ -223,6 +225,21 @@ public class DemoApplication implements CommandLineRunner {
 			try {
 				IO.println("------------------> reintentaConTemplate: " + dummy.reintentaConTemplate(3));
 				IO.println("------------------> reintentaConTemplate: " + dummy.reintentaConTemplate(5));
+			} catch (Exception e) {
+				System.err.println("ERROR reintentaConTemplate: " + e.getMessage());
+			}
+		};
+	}
+	
+	@Bean
+	CommandLineRunner limites(DummyRetry dummy, DummyAsync obj) {
+		return arg -> {
+			try {
+				obj.calcularResultadoAsync(10, 20, 30, 40, 50).thenAccept(result -> notify.add(result));
+				obj.calcularResultadoAsync(10, 20, 30, 40, 50).thenAccept(result -> notify.add(result));
+				obj.calcularResultadoAsync(10, 20, 30, 40, 50).thenAccept(result -> notify.add(result));
+				obj.calcularResultadoAsync(10, 20, 30, 40, 50).thenAccept(result -> notify.add(result));
+				obj.calcularResultadoAsync(10, 20, 30, 40, 50).thenAccept(result -> notify.add(result));
 			} catch (Exception e) {
 				System.err.println("ERROR reintentaConTemplate: " + e.getMessage());
 			}

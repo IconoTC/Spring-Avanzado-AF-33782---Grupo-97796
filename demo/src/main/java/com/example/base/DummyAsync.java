@@ -6,6 +6,8 @@ import java.util.concurrent.CompletableFuture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
+import org.springframework.resilience.annotation.ConcurrencyLimit;
+import org.springframework.resilience.annotation.ConcurrencyLimit.ThrottlePolicy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +42,7 @@ public class DummyAsync {
 		return calcularResultado(input);
 	}
 	
+	@ConcurrencyLimit(limit = 5, policy = ThrottlePolicy.REJECT)
 	public CompletableFuture<String> calcularResultado(int... input) {
 		System.err.println(
 				"-> Cálculo para %s iniciando en el hilo: %s.".formatted(Arrays.toString(input), Thread.currentThread().getName()));
