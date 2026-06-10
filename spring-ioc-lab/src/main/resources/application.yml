@@ -1,5 +1,8 @@
 spring:
   application:
     name: spring-ioc-lab
-mi:
-  valor: en yml
+  profiles:
+    active: dev
+logging:
+  level:
+    root: warn

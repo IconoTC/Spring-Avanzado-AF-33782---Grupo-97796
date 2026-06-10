@@ -7,7 +7,7 @@ Crear un aspecto con Spring  AOP que lance excepciones cuando:
 - un método reciba un argumento con valor null (IllegalArgumentException)
 - un método devuelva null (NoSuchElementException).
 
-Este laboratorio te guiará paso a paso para crear, integrar y probar el aspecto `StrictNullChecksAspect` en una aplicación Spring Boot. Aprenderás a usar AOP (Programación Orientada a Aspectos) para validar argumentos y retornos nulos en los métodos de tu aplicación.
+Este laboratorio te guiará paso a paso para crear, integrar y probar el aspecto `StrictNullChecksAspect` en una aplicación Spring Boot. Aprenderás a usar AOP (Programación Orientada a Aspectos) para validar argumentos y retornos nulos en los métodos de tu aplicación, siguiendo la técnica del Desarrollo Guiado por Pruebas (TDD), consistente en desarrollar primero el código que pruebe una característica o funcionalidad deseada antes que el código que implementa dicha funcionalidad y re factorizar después de implementar dicha funcionalidad.
 
 ### Requisitos previos
 
@@ -75,6 +75,8 @@ public class SpringAopLabApplication {
 
 ## Paso 3. Crear una clase de servicio para probar el aspecto
 
+El servicio es un componente de pruebas que simula el comportamiento esperado de los componentes reales para los diferentes escenarios de prueba.
+
 `src/test/java/com/example/aop/DummyService.java`
 
 ```java
@@ -115,6 +117,8 @@ public class DummyService {
 ```
 
 ## Paso 4. Crear las Pruebas Automatizadas
+
+Estas pruebas validan dos cosas a la vez: el comportamiento normal del servicio y la activación real del aspecto cuando el bean pasa por el proxy de Spring. Por eso usamos `@SpringBootTest` en lugar de tests unitarios aislados.
 
 Crea un test de integración en `src/test/java/com/example/aop/StrictNullChecksAspectTest.java`:
 
@@ -196,7 +200,7 @@ class StrictNullChecksAspectTest {
 ```
 
 > [!NOTE]
-> Son pruebas de integración con @SpringBootTest para que SampleService sea inyectado y se verifique que se lanzan las excepciones esperadas.
+> Son pruebas de integración con `@SpringBootTest` para que `DummyService` sea inyectado y se verifique que se lanzan las excepciones esperadas.
 
 > [!IMPORTANT]
 > Las pruebas llaman al bean inyectado (pasa por el proxy AOP y activa el aspecto).
@@ -205,6 +209,8 @@ class StrictNullChecksAspectTest {
 > Las pruebas se pueden ejecutar con `mvn test` o con el propio IDE.
 
 ## Paso 5. Ejecuta las pruebas
+
+En este punto todavía no existe el aspecto, así que la aplicación solo valida lo que hace el servicio por sí mismo. Las pruebas que dependen del aspecto fallarán hasta que creemos `StrictNullChecksAspect`.
 
 | Resultados (6/8)|
 | --- |
@@ -224,7 +230,9 @@ class StrictNullChecksAspectTest {
 
 ## Paso 6. Crear el aspecto StrictNullChecks
 
-`src/main/java/com/example/aop/StrictNullChecksAspect.java` 
+Aquí solo creamos la estructura base del aspecto. La clase ya está preparada para que Spring la detecte, pero todavía no intercepta ninguna llamada.
+
+`src/main/java/com/example/aop/StrictNullChecksAspect.java`
 
 ```java
 package com.example.aop;
@@ -246,6 +254,8 @@ public class StrictNullChecksAspect {
 ```
 
 ## Paso 7. Añadir el consejo (advice) que compruebe los argumentos nulos
+
+El `@Before` se ejecuta justo antes de que entre un método objetivo: cualquier método con al menos un parámetro. Recorre los argumentos recibidos y, si alguno es `null`, lanza una excepción con información del índice del argumento y la firma del método.
 
 `src/main/java/com/example/aop/StrictNullChecksAspect.java` 
 
@@ -276,11 +286,13 @@ public class StrictNullChecksAspect {
 
 ## Paso 8. Ejecuta las pruebas
 
-| Resultados (7/8)|
+Ahora ya debería pasar la validación de argumentos nulos. Si aún falla la comprobación de retornos, es normal: todavía no hemos añadido el advice que valida el valor devuelto.
+
+| Resultados (7/8) |
 | --- |
 | *Valores validos para los argumentos de los métodos* |
 |   ✅ [1] caso='not null' |
-|   ✅ [2] caso=''  |
+|   ✅ [2] caso='' |
 | ✅ El aspecto lanza IllegalArgumentException con argumentos nulos |
 | ❌ El aspecto lanza NoSuchElementException con retornos nulos |
 | ✅ Valores validos para la propiedad Value |
@@ -294,9 +306,11 @@ public class StrictNullChecksAspect {
 
 ## Paso 9. Añadir el consejo (advice) que compruebe valores nulos de retorno
 
+El `@AfterReturning` se ejecuta solo cuando el método termina con normalidad. Si el retorno es `null`, el aspecto transforma esa situación en una `NoSuchElementException`, que es justo el comportamiento esperado para el tratamiento estricto de nulos.
+
 `src/main/java/com/example/aop/StrictNullChecksAspect.java` 
 
-```java title="app.js"
+```java
 package com.example.aop;
 
 import java.util.NoSuchElementException;
@@ -328,11 +342,13 @@ public class StrictNullChecksAspect {
 
 ## Paso 10. Ejecuta las pruebas
 
-| Resultados (8/8)|
+Con el segundo advice ya en marcha, todas las comprobaciones deberían quedar cubiertas. Si ves fallos en la prueba de `clearValue()`, revisa la llamada interna: en Spring AOP el auto referenciado no pasa por el proxy, así que el aspecto no se activa.
+
+| Resultados (8/8) |
 | --- |
 | *Valores validos para los argumentos de los métodos* |
 |   ✅ [1] caso='not null' |
-|   ✅ [2] caso=''  |
+|   ✅ [2] caso='' |
 | ✅ El aspecto lanza IllegalArgumentException con argumentos nulos |
 | ✅ El aspecto lanza NoSuchElementException con retornos nulos |
 | ✅ Valores validos para la propiedad Value |
@@ -345,21 +361,21 @@ public class StrictNullChecksAspect {
 > El orden puede cambiar pseudo aleatoriamente.
 
 > [!CAUTION]
-> El auto refenciado no genero excepción. Para forzar a que lo valide, hay que sustituir la referencia propia (this) por la del proxy (target):
+> El auto referenciado no genera excepción porque la invocación interna no atraviesa el proxy de Spring. Para forzar la validación, hay que sustituir la llamada directa a  la referencia propia (this) por una llamada al proxy (target):
+> 
 > ```java
->    public void clearValue() {
->        // value = alwaysNull(); // auto referenciado
->        value = ((DummyService) AopContext.currentProxy()).alwaysNull();
->    }
+>public void clearValue() {
+>    // value = alwaysNull(); // auto referenciado
+>    value = ((DummyService) AopContext.currentProxy()).alwaysNull();
+>}
 >```
-> En el test de integración en `StrictNullChecksAspectTest.java` hay que habilitar el AutoProxy:
+>
+> En `StrictNullChecksAspectTest.java`, en el test de integración hay que habilitar la exposición del proxy:
 >
 > ```java
 > @EnableAspectJAutoProxy(exposeProxy = true)
 > class StrictNullChecksAspectTest {
 >```
-
-
 
 | Resultados (5/8)|
 | --- |
@@ -374,12 +390,14 @@ public class StrictNullChecksAspect {
 |   ❌ [1] caso=null |
 |   ❌ [2] caso='' |
 
-## Pontos clave del Aspecto
+## Puntos clave del Aspecto
 
-- **@Component:** Marca la clase como componente para que el scan la detecte.
-- **@Aspect:** Marca la clase como aspecto de AOP.
-- **@Before:** Intercepta antes de ejecutar métodos públicos en `com.example..*` con al menos un parámetro y lanza una `IllegalArgumentException` si algún argumento es nulo.
-- **@AfterReturning:** Intercepta después de métodos con retorno (no `void`) y lanza una `NoSuchElementException` si el retorno es nulo.
+- **`@Component`:** hace que Spring registre la clase como bean y la encuentre durante el escaneo de componentes.
+- **`@Aspect`:** indica que la clase contiene consejos AOP.
+- **`@Before`:** intercepta los métodos públicos de las clases del paquete `com.example` y sus sub paquetes antes de ejecutarlos para lanzar una `IllegalArgumentException` si algún argumento es nulo.
+- **`@AfterReturning`:** intercepta los métodos con valor de retorno después de ejecutarlos y lanza una `NoSuchElementException` si intenta devolver un nulo.
+  
+En conjunto, estos dos consejos convierten el tratamiento estricto de nulos en una preocupación transversal: no la repetimos en cada clase de negocio, sino en un único punto centralizado.
 
 ## Estructura base
 
@@ -395,9 +413,9 @@ public class StrictNullChecksAspect {
 
 ## Buenas Prácticas y Extensiones
 
-- Puedes ajustar los pointcuts para afinar los métodos mas problemáticos.
-- Considera usar anotaciones personalizadas para marcar métodos a validar en lugar de interceptar todo el paquete
-- Agrega logging para una mejor trazabilidad.
+- Puedes ajustar los pointcuts para afinar los métodos más problemáticos.
+- Considera usar anotaciones personalizadas para marcar solo los métodos que quieras validar.
+- Agrega logging para obtener trazabilidad sin abrir el debugger.
 
 ## Recursos Adicionales
 

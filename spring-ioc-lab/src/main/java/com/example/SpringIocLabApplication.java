@@ -4,8 +4,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.example.model.ContadorBean;
+import com.example.model.Saludar;
 import com.example.service.FieldInjectionService;
 import com.example.service.PersonaService;
 import com.example.service.SetterService;
@@ -59,6 +61,25 @@ public class SpringIocLabApplication implements CommandLineRunner {
         personaService.decirHola();
         personaService.mostrarMensajeCalificado();
 
+        System.out.println("\n7) Beans por perfil activo (consulta):");
+        String[] profiles = ctx.getEnvironment().getActiveProfiles();
+        System.out.println("Active profiles: " + java.util.Arrays.toString(profiles));
+        if (ctx.containsBean("profileSaludo")) {
+            var bean = (Saludar) ctx.getBean("profileSaludo");
+            System.out.println("Bean 'profileSaludo' presente: " + bean.getClass().getSimpleName());
+            System.out.println(bean.obtenerMensaje());
+        } else {
+            System.out.println("Bean 'profileSaludo' no definido para el perfil activo.");
+        }
+        // Cargar perfil 'prod'
+        var prod = new AnnotationConfigApplicationContext();
+        prod.getEnvironment().setActiveProfiles("prod");
+        prod.scan("com.example.model");
+        prod.refresh();
+        var bean = (Saludar) prod.getBean("profileSaludo");
+        System.out.println("Bean 'profileSaludo' cargado: " + bean.getClass().getSimpleName());
+        System.out.println(bean.obtenerMensaje());
+        
     }
 
     public static void main(String[] args) {
