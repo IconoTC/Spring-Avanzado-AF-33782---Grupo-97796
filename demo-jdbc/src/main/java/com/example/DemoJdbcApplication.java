@@ -1,7 +1,15 @@
 package com.example;
 
+import java.time.LocalDateTime;
+
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.jdbc.core.simple.JdbcClient;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 @SpringBootApplication
 public class DemoJdbcApplication {
@@ -10,4 +18,81 @@ public class DemoJdbcApplication {
 		SpringApplication.run(DemoJdbcApplication.class, args);
 	}
 
+	@Data
+	@AllArgsConstructor
+	static class Actor {
+		private int actorId;
+		private String firstName;
+		private String lastName;
+		private LocalDateTime lastUpdate;
+	}
+
+	@Bean
+	CommandLineRunner consulta(JdbcClient jdbcClient) {
+		return arg -> {
+			System.out.println(
+					jdbcClient
+					.sql("SELECT count(1) FROM actor")
+					.query(Integer.class)
+					.single()
+					);
+			var actor = jdbcClient.sql("select * from actor where actor_id = ?").param(1)
+					.query(Actor.class)
+					.optional();
+			if (actor.isPresent()) {
+				IO.println(actor.get());
+			} else {
+				IO.println("No encontrado");
+			}
+			jdbcClient
+				.sql("SELECT * FROM actor limit 10")
+				.query(Actor.class)
+				.list()
+				.forEach(System.out::println);
+		};
+	}
+	
+	//@Bean
+	CommandLineRunner dml(JdbcClient jdbcClient) {
+		return arg -> {
+			var rows = jdbcClient.sql("insert into actor (first_name, last_name) values (?, ?)")
+				.param("Leonor").param("Watling")
+				.update();
+			IO.println("Filas insertadas: " + rows);
+			int id = jdbcClient.sql("select actor_id from actor where first_name = :firstName and last_name = :lastName")
+					.param("lastName", "Watling").param("firstName", "Leonor")
+					.query(Integer.class)
+					.single();
+			var actor = jdbcClient.sql("select * from actor where actor_id = ?")
+					.param(id)
+					.query(Actor.class)
+					.single();
+			IO.println(actor);
+			rows = jdbcClient.sql("update actor set first_name = :firstName, last_name = :lastName where actor_id = :id")
+					.param("id", actor.getActorId())
+					.param("firstName", actor.getFirstName().toUpperCase())
+					.param("lastName", actor.getLastName().toUpperCase())
+					.update();
+			IO.println("Filas modificadas: " + rows);
+			IO.println(actor);
+			actor = jdbcClient.sql("select * from actor where actor_id = ?")
+					.param(id)
+					.query(Actor.class)
+					.single();
+			IO.println(actor);
+			rows = jdbcClient.sql("delete from actor where actor_id = ?")
+					.param(actor.getActorId())
+					.update();
+			IO.println("Filas borradas: " + rows);
+			if(jdbcClient.sql("select * from actor where actor_id = ?")
+					.param(id)
+					.query(Actor.class)
+					.optional()
+					.isEmpty()) {
+				IO.println("No encontrado");
+			} else {
+				IO.println("No lo ha borrado");
+			}
+		};
+	}
 }
