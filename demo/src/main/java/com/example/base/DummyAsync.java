@@ -16,7 +16,7 @@ public class DummyAsync {
     private DummyAsync self;
 
 	public void ejecutarAutoInvocado(int i) {
-		ejecutarTareaSimpleAsync(i);
+		self.ejecutarTareaSimpleAsync(i);
 	}
 	
 	@Async

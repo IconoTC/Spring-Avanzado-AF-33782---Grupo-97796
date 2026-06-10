@@ -1,6 +1,7 @@
 package com.example;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import com.example.aop.AspectoImplAspect;
 import com.example.aop.AuthenticationService;
@@ -31,6 +35,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @SpringBootApplication
 @EnableAspectJAutoProxy
+@EnableScheduling
+@EnableAsync
 public class DemoApplication implements CommandLineRunner {
 //	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DemoApplication.class);
 
@@ -87,9 +93,9 @@ public class DemoApplication implements CommandLineRunner {
 				notify.add(miValor);
 				notify.add(rango.toString());
 				notify.add(Integer.toString(rango.getMax()));
-				System.out.println("=================================>");
-				notify.getListado().forEach(System.out::println);
-				System.out.println("<=================================");
+//				System.out.println("=================================>");
+//				notify.getListado().forEach(System.out::println);
+//				System.out.println("<=================================");
 				if (srv instanceof Visible v) {
 					System.out.println(v.isVisible() ? "Ahora me ves" : "Ahora NO me ves");
 					v.mostrar();
@@ -178,8 +184,14 @@ public class DemoApplication implements CommandLineRunner {
 	@Autowired
 	NotificationService notify;
 	
+	@Scheduled(timeUnit = TimeUnit.SECONDS, fixedRate = 5)
 	void tareasProgramadas() {
-		
+//		System.out.println("Han pasado 5 segundos.");
+		if(!notify.hasMessages()) return;
+		System.out.println("=================================>");
+		notify.getListado().forEach(System.out::println);
+		notify.clear();
+		System.out.println("<=================================");
 	}
 
 //	@Bean
