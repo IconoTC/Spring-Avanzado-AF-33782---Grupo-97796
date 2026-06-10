@@ -61,7 +61,8 @@ Aprender cómo funciona Spring IoC y sus principales características dentro de 
         └─ application.yml
 ```
 
-> Nota: a partir de aquí, varios pasos sustituyen la misma clase con variantes diferentes. Eso es intencional: cada bloque muestra un concepto aislado y no hace falta mezclar todas las versiones a la vez.
+> [!NOTE]
+> A partir de aquí, varios pasos sustituyen la misma clase con variantes diferentes. Eso es intencional: cada bloque muestra un concepto aislado y no hace falta mezclar todas las versiones a la vez.
 
 ## Paso 2: Clase principal
 

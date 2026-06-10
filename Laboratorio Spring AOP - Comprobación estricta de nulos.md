@@ -7,7 +7,7 @@ Crear un aspecto con Spring  AOP que lance excepciones cuando:
 - un método reciba un argumento con valor null (IllegalArgumentException)
 - un método devuelva null (NoSuchElementException).
 
-Este laboratorio te guiará paso a paso para crear, integrar y probar el aspecto `StrictNullChecksAspect` en una aplicación Spring Boot. Aprenderás a usar AOP (Programación Orientada a Aspectos) para validar argumentos y retornos nulos en los métodos de tu aplicación, siguiendo la técnica del Desarrollo Guiado por Pruebas (TDD), consistente en desarrollar primero el código que pruebe una característica o funcionalidad deseada antes que el código que implementa dicha funcionalidad y re factorizar después de implementar dicha funcionalidad.
+Este laboratorio te guiará paso a paso para crear, integrar y probar el aspecto `StrictNullChecksAspect` en una aplicación Spring Boot. *Aprenderás a usar AOP (Programación Orientada a Aspectos)* para validar argumentos y retornos nulos en los métodos de tu aplicación, siguiendo la técnica del *Desarrollo Guiado por Pruebas (TDD)*, consistente en desarrollar primero el código que pruebe una característica o funcionalidad deseada antes que el código que implementa dicha funcionalidad y re factorizar después de implementar dicha funcionalidad.
 
 ### Requisitos previos
 
