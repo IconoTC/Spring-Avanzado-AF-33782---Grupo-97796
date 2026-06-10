@@ -1,8 +1,10 @@
-package com.example.aop;
+package com.example.base;
 
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -10,6 +12,9 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class DummyAsync {
+    @Autowired @Lazy
+    private DummyAsync self;
+
 	public void ejecutarAutoInvocado(int i) {
 		ejecutarTareaSimpleAsync(i);
 	}

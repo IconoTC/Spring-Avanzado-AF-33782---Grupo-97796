@@ -2,24 +2,26 @@ package com.example;
 
 import java.util.List;
 
+import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.event.EventListener;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import com.example.aop.AspectoImplAspect;
 import com.example.aop.AuthenticationService;
 import com.example.aop.introductions.Visible;
+import com.example.base.DummyAsync;
 import com.example.base.DummyJSpecify;
+import com.example.base.DummyRetry;
 import com.example.ioc.ConstructorConValores;
-import com.example.ioc.GenericoEvent;
 import com.example.ioc.NotificationService;
 import com.example.ioc.Rango;
 import com.example.ioc.anotaciones.Twit;
-import com.example.ioc.contratos.Configuracion;
 import com.example.ioc.contratos.ServicioCadenas;
 import com.example.ioc.notificaciones.Sender;
 
@@ -31,12 +33,12 @@ import lombok.extern.slf4j.Slf4j;
 @EnableAspectJAutoProxy
 public class DemoApplication implements CommandLineRunner {
 //	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DemoApplication.class);
-	
-	private final ConstructorConValores miClase;
 
-	DemoApplication(ConstructorConValores miClase) {
-		this.miClase = miClase;
-	}
+//	private final ConstructorConValores miClase;
+//
+//	DemoApplication(ConstructorConValores miClase) {
+//		this.miClase = miClase;
+//	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
@@ -52,32 +54,31 @@ public class DemoApplication implements CommandLineRunner {
 	void Cierre() {
 		System.err.println("Aplicación cerrada...");
 	}
-	
+
 //	@Bean
-	CommandLineRunner nulos(/*DummyJSpecify dummy*/) {
+	CommandLineRunner nulos(/* DummyJSpecify dummy */) {
 		return arg -> {
 			try {
 				var dummy = new DummyJSpecify("Hola mundo");
 				System.err.println(dummy.getClass().getCanonicalName());
 				dummy.setCadenaSegura(null);
 //				System.out.println(dummy.getCadena().toUpperCase());
-				if(dummy.getCadenaSegura().isPresent())
-				System.out.println(dummy.getCadenaSegura().get().toUpperCase());
+				if (dummy.getCadenaSegura().isPresent())
+					System.out.println(dummy.getCadenaSegura().get().toUpperCase());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		};
 	}
-	
-	@Bean
-	CommandLineRunner ioc(NotificationService notify, ServicioCadenas srv, ConstructorConValores miOtraClase, 
-			@Value("${mi.valor:Sin valor}") String miValor, Rango rango, AuthenticationService auth
-) {
+
+//	@Bean
+	CommandLineRunner ioc(NotificationService notify, ServicioCadenas srv, ConstructorConValores miOtraClase,
+			@Value("${mi.valor:Sin valor}") String miValor, Rango rango, AuthenticationService auth) {
 		return arg -> {
 			try {
 //				NotificationService notify = new NotificationServiceImpl();
 //				ServicioCadenas srv = new ServicioCadenasImpl(new RepositorioCadenasImpl(new ConfiguracionImpl(notify), notify), notify);
-				
+
 				miOtraClase.titulo(miOtraClase.getAutor());
 				notify.add("Hola mundo");
 				System.err.println(srv.getClass().getCanonicalName());
@@ -89,19 +90,20 @@ public class DemoApplication implements CommandLineRunner {
 				System.out.println("=================================>");
 				notify.getListado().forEach(System.out::println);
 				System.out.println("<=================================");
-				if(srv instanceof Visible v) {
+				if (srv instanceof Visible v) {
 					System.out.println(v.isVisible() ? "Ahora me ves" : "Ahora NO me ves");
 					v.mostrar();
 					System.out.println(v.isVisible() ? "Ahora me ves" : "Ahora NO me ves");
 					v.ocultar();
 					System.out.println(v.isVisible() ? "Ahora me ves" : "Ahora NO me ves");
-				} else 
+				} else
 					System.out.println("No implementa el interfaz Visible");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		};
 	}
+
 //	@Bean
 	CommandLineRunner porNombre(@Twit Sender sender, List<Sender> todos) {
 		return arg -> {
@@ -113,7 +115,7 @@ public class DemoApplication implements CommandLineRunner {
 			}
 		};
 	}
-	
+
 //	@Bean
 	CommandLineRunner configuracionEnXML() {
 		return _ -> {
@@ -151,4 +153,68 @@ public class DemoApplication implements CommandLineRunner {
 //	void eventHandlerCadena(String event) {
 //		System.err.println("Evento cadena: %s".formatted(event));
 //	}
+
+//	@Bean
+	CommandLineRunner generarProxyAOPManualmente() {
+		return arg -> {
+			try {
+				var dummy = new DummyJSpecify("Hola mundo");
+				AspectJProxyFactory factory = new AspectJProxyFactory(dummy);
+				factory.addAspect(AspectoImplAspect.class);
+				dummy = factory.getProxy();
+
+				System.err.println(dummy.getClass().getCanonicalName());
+				dummy.setCadenaSegura(null);
+//				System.out.println(dummy.getCadena().toUpperCase());
+				if (dummy.getCadenaSegura().isPresent())
+					System.out.println(dummy.getCadenaSegura().get().toUpperCase());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		};
+	}
+
+
+	@Autowired
+	NotificationService notify;
+	
+	void tareasProgramadas() {
+		
+	}
+
+//	@Bean
+	CommandLineRunner asincrono(DummyAsync dummy) {
+		return arg -> {
+			var obj = dummy; // new DummyAsync();
+			System.err.println(obj.getClass().getCanonicalName());
+//			obj.ejecutarAutoInvocado(1);
+//			obj.ejecutarAutoInvocado(2);
+			obj.ejecutarTareaSimpleAsync(1);
+			obj.ejecutarTareaSimpleAsync(2);
+			obj.calcularResultadoAsync(10, 20, 30, 40, 50).thenAccept(result -> notify.add(result));
+			obj.calcularResultadoAsync(1, 2, 3).thenAccept(result -> notify.add(result));
+			obj.calcularResultadoAsync().thenAccept(result -> notify.add(result));
+			System.err.println("Termino de mandar hacer las cosas");
+		};
+	}
+
+//	@Bean
+	CommandLineRunner resiliencia(DummyRetry dummy) {
+		return arg -> {
+			try {
+				IO.println("------------------> reintentaConAnotacion: " + dummy.reintentaConAnotacion(3));
+				IO.println("------------------> reintentaConAnotacion: " + dummy.reintentaConAnotacion(5));
+			} catch (Exception e) {
+				System.err.println("ERROR reintentaConAnotacion: " + e.getMessage());
+			}
+//			dummy.reinicia();
+			try {
+				IO.println("------------------> reintentaConTemplate: " + dummy.reintentaConTemplate(3));
+				IO.println("------------------> reintentaConTemplate: " + dummy.reintentaConTemplate(5));
+			} catch (Exception e) {
+				System.err.println("ERROR reintentaConTemplate: " + e.getMessage());
+			}
+		};
+	}
+
 }

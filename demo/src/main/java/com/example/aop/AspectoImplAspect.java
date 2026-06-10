@@ -46,10 +46,10 @@ public class AspectoImplAspect {
 //		System.err.println(">>> La funcion '" + jp.getSignature() + "' ha devuelto " + retVal);
 //	}
 
-//	@AfterThrowing(pointcut="execution(void com.example..*.set*(..))",	throwing = "ex")
-//	public void consejoDespuesDeGetPropiedad(JoinPoint jp, Throwable ex) {
-//		System.err.println(">>> El setter '" + jp.getSignature() + "' ha devuelto la excepcion " + ex.getClass().getSimpleName());
-//	}
+	@AfterThrowing(pointcut="execution(void com.example..*.set*(..))",	throwing = "ex")
+	public void consejoDespuesDeGetPropiedad(JoinPoint jp, Throwable ex) {
+		System.err.println(">>> El setter '" + jp.getSignature() + "' ha devuelto la excepcion " + ex.getClass().getSimpleName());
+	}
 
 //	@Around( "execution(* com.example.ioc..*.get*())")
 //	public Object consejoQueEnvuelveGetters(ProceedingJoinPoint jp) throws Throwable {

@@ -4,12 +4,14 @@ import java.beans.ConstructorProperties;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
+@Lazy
 @Component("miOtraClase")
 //@Scope("prototype")
 public class ConstructorConValores {
