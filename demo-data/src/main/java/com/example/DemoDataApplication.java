@@ -51,14 +51,14 @@ public class DemoDataApplication {
 //			dao.findNovedadesJPQL(195).forEach(System.out::println);
 //			dao.findNovedadesSQL(195).forEach(System.out::println);
 //			dao.findAll((root, query, builder) -> builder.greaterThanOrEqualTo(root.get("actorId"), 195)).forEach(System.out::println);
-			dao.findAll((root, query, builder) -> builder.lessThan(root.get("actorId"), 4)).forEach(System.out::println);
+//			dao.findAll((root, query, builder) -> builder.lessThan(root.get("actorId"), 4)).forEach(System.out::println);
 //			self.navegacion(dao);
 			try {
-//				self.modifica(dao);
+				self.modifica(dao);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			dao.findNovedadesJPQL(200).forEach(System.out::println);
+//			dao.findNovedadesJPQL(200).forEach(System.out::println);
 		};
 	}
 	
@@ -72,8 +72,13 @@ public class DemoDataApplication {
 
 	@Transactional(rollbackFor = Exception.class)
 	void modifica(ActoresRepository dao) {
-		dao.save(new Actor("Pepito", "Grillo"));
-		dao.save(new Actor("Carmelo", "Coton"));
+		var actor = new Actor(null, "12345678z");
+		if(actor.isInvalid())
+			System.err.println(actor.getErrorsMessage());
+		else
+			dao.save(actor);
+//		dao.save(new Actor("Pepito", "Grillo"));
+//		dao.save(new Actor("Carmelo", "Coton"));
 //		dao.deleteById(1);
 	}
 
