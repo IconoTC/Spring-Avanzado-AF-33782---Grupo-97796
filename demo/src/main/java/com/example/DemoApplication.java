@@ -182,14 +182,14 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 
-
 	@Autowired
 	NotificationService notify;
-	
+
 	@Scheduled(timeUnit = TimeUnit.SECONDS, fixedRate = 5)
 	void tareasProgramadas() {
 //		System.out.println("Han pasado 5 segundos.");
-		if(!notify.hasMessages()) return;
+		if (!notify.hasMessages())
+			return;
 		System.out.println("=================================>");
 		notify.getListado().forEach(System.out::println);
 		notify.clear();
@@ -230,18 +230,16 @@ public class DemoApplication implements CommandLineRunner {
 			}
 		};
 	}
-	
+
 	@Bean
 	CommandLineRunner limites(DummyRetry dummy, DummyAsync obj) {
 		return arg -> {
-			try {
-				obj.calcularResultadoAsync(10, 20, 30, 40, 50).thenAccept(result -> notify.add(result));
-				obj.calcularResultadoAsync(10, 20, 30, 40, 50).thenAccept(result -> notify.add(result));
-				obj.calcularResultadoAsync(10, 20, 30, 40, 50).thenAccept(result -> notify.add(result));
-				obj.calcularResultadoAsync(10, 20, 30, 40, 50).thenAccept(result -> notify.add(result));
-				obj.calcularResultadoAsync(10, 20, 30, 40, 50).thenAccept(result -> notify.add(result));
-			} catch (Exception e) {
-				System.err.println("ERROR reintentaConTemplate: " + e.getMessage());
+			for (var i = 1; ++i <= 10;) {
+				obj.calcularResultadoAsync(10 * i, 20 * i, 30 * i, 40 * i, 50 * i)
+					.exceptionally(e -> { 
+						return "ERROR %s".formatted(e.getMessage());
+						})
+					.thenAccept(result -> notify.add(result));
 			}
 		};
 	}

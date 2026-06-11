@@ -38,11 +38,11 @@ public class DummyAsync {
 	}
 
 	@Async
+	@ConcurrencyLimit(limit = 5, policy = ThrottlePolicy.REJECT)
 	public CompletableFuture<String> calcularResultadoAsync(int... input) {
 		return calcularResultado(input);
 	}
 	
-	@ConcurrencyLimit(limit = 5, policy = ThrottlePolicy.REJECT)
 	public CompletableFuture<String> calcularResultado(int... input) {
 		System.err.println(
 				"-> Cálculo para %s iniciando en el hilo: %s.".formatted(Arrays.toString(input), Thread.currentThread().getName()));
