@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.contracts.domain.repositories.ActoresRepository;
 import com.example.domain.entities.Actor;
+import com.example.domain.entities.models.ActorDTO;
+import com.example.domain.entities.models.ActorShort;
 
 @SpringBootApplication
 public class DemoDataApplication {
@@ -53,12 +55,17 @@ public class DemoDataApplication {
 //			dao.findAll((root, query, builder) -> builder.greaterThanOrEqualTo(root.get("actorId"), 195)).forEach(System.out::println);
 //			dao.findAll((root, query, builder) -> builder.lessThan(root.get("actorId"), 4)).forEach(System.out::println);
 //			self.navegacion(dao);
-			try {
-				self.modifica(dao);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+//			try {
+//				self.modifica(dao);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
 //			dao.findNovedadesJPQL(200).forEach(System.out::println);
+//			dao.findByActorIdGreaterThanEqual(200).forEach(a -> System.out.println(ActorDTO.from(a)));
+//			dao.getByActorIdGreaterThanEqual(200).forEach(System.out::println);
+//			dao.queryByActorIdGreaterThanEqual(200).forEach(a -> System.out.println("%d %s".formatted(a.getId(), a.getNombre())));
+			dao.searchByActorIdGreaterThanEqual(200, ActorDTO.class).forEach(System.out::println);
+			dao.searchByActorIdGreaterThanEqual(200, ActorShort.class).forEach(a -> System.out.println("%d %s".formatted(a.getId(), a.getNombre())));
 		};
 	}
 	
