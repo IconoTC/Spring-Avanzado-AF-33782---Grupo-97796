@@ -38,7 +38,7 @@ public class DummyAsync {
 	}
 
 	@Async
-	@ConcurrencyLimit(limit = 5, policy = ThrottlePolicy.REJECT)
+	@ConcurrencyLimit(limit = 5, policy = ThrottlePolicy.BLOCK)
 	public CompletableFuture<String> calcularResultadoAsync(int... input) {
 		return calcularResultado(input);
 	}
