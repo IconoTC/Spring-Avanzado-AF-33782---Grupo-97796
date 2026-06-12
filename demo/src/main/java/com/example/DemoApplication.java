@@ -232,7 +232,7 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 
-	@Bean
+//	@Bean
 	CommandLineRunner limites(DummyRetry dummy, DummyAsync obj) {
 		return arg -> {
 			for (var i = 1; ++i <= 10;) {
@@ -246,7 +246,7 @@ public class DemoApplication implements CommandLineRunner {
 	}
 
 
-//	@Bean
+	@Bean
 	CommandLineRunner demosCorreos(MessagingService mensajeria) {
 		return _ -> {
 			mensajeria.sendWelcomeEmailAsync("pgrillo@example.com", "Pepito Grillo");
