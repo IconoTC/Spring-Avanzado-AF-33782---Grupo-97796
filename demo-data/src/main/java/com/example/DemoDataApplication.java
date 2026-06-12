@@ -10,9 +10,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.contracts.domain.repositories.ActoresRepository;
+import com.example.contracts.domain.repositories.CategoriesRepository;
 import com.example.domain.entities.Actor;
 import com.example.domain.entities.models.ActorDTO;
 import com.example.domain.entities.models.ActorShort;
+
+import tools.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
 public class DemoDataApplication {
@@ -43,7 +46,7 @@ public class DemoDataApplication {
 		};
 	}
 
-	@Bean
+//	@Bean
 	CommandLineRunner consultas(ActoresRepository dao) {
 		return arg -> {
 //			dao.findTop5ByFirstNameStartingWithOrderByLastNameDesc("P").forEach(System.out::println);
@@ -87,6 +90,19 @@ public class DemoDataApplication {
 //		dao.save(new Actor("Pepito", "Grillo"));
 //		dao.save(new Actor("Carmelo", "Coton"));
 //		dao.deleteById(1);
+	}
+
+	@Bean
+	CommandLineRunner serializacion(ActoresRepository dao, CategoriesRepository daoCategories) {
+		return arg -> {
+			var toJSON = new ObjectMapper();
+			System.out.println(toJSON.writeValueAsString(dao.searchByActorIdGreaterThanEqual(200, ActorDTO.class)));
+			System.out.println(toJSON.writeValueAsString(dao.searchByActorIdGreaterThanEqual(200, ActorShort.class)));
+			System.out.println(toJSON.writeValueAsString(daoCategories.findByOrderByName()));
+			var toXML = new tools.jackson.dataformat.xml.XmlMapper();
+			System.out.println(toXML.writeValueAsString(daoCategories.findByOrderByName()));
+
+		};
 	}
 
 	
