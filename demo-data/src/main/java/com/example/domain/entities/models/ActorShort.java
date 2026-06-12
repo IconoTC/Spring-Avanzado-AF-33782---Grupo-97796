@@ -1,8 +1,11 @@
 package com.example.domain.entities.models;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.rest.core.config.Projection;
 
-//@Projection(name = "nombre-corto", types = {Actor.class})
+import com.example.domain.entities.Actor;
+
+@Projection(name = "nombre-corto", types = {Actor.class})
 public interface ActorShort {
 	@Value("#{target.actorId}")
 	int getId();
